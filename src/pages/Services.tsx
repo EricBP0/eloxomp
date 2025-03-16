@@ -1,5 +1,3 @@
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import { useState } from "react";
 
 const ranks = [
@@ -45,8 +43,14 @@ const Services = () => {
                             price += rankIterator.multiplicator
                         }
                     }else{
-                        for(let j = 0; j < subdivisions.length; j++) {
-                            price += rankIterator.multiplicator
+                        if(rankIterator.elo == desiredRank.elo){
+                            for(let j = 0; j < (desiredDivision.id - 1); j++) {
+                                price += rankIterator.multiplicator
+                            }
+                        }else{
+                            for(let j = 0; j < subdivisions.length; j++) {
+                                price += rankIterator.multiplicator
+                            }
                         }
                     }
                 }else {
@@ -67,15 +71,15 @@ const Services = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white">
-            <Navbar />
+        <div className="min-h-screen min-w-screen bg-gray-900 text-white">
+            <style href={"../styles/global.css"}/>
             <div className="container mx-auto py-24 px-6">
-                <h1 className="text-4xl font-bold text-center mb-10">Personalize Seu Elojob</h1>
+                <h1 className="text-4xl text-black font-bold text-center mb-10">Personalize Seu Elojob</h1>
 
                 {/* SELEÇÃO DO ELO ATUAL E DESEJADO */}
-                <div className="flex-direction flex-row md:flex-row justify-center gap-8">
+                <div className="flex-direction flex flex-row md:flex-row justify-center gap-8">
                     {/* SELEÇÃO DO ELO ATUAL */}
-                    <div className="w-full md:w-1/2 flex cursor-pointer items-center">
+                    <div className="card w-full md:w-1/2 flex cursor-pointer items-center">
                         <h2 className="text-xl font-semibold mb-4">Seu Elo Atual</h2>
 
                         {currentRank && (
@@ -168,7 +172,6 @@ const Services = () => {
                 {/* EXIBIÇÃO DO PREÇO */}
                 {price > 0 && <p className="text-lg font-bold mt-4 text-center">Preço: R$ {price},00</p>}
             </div>
-            <Footer />
         </div>
     );
 };
