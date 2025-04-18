@@ -62,7 +62,7 @@ export default function StepResumo({ onNext, onBack }: Props) {
             <div className="mb-6">
                 <label className="font-semibold text-gray-700">📝 Observação:</label>
                 <textarea
-                    className="w-full mt-2 p-3 border border-gray-300 rounded-xl focus:outline-none"
+                    className="w-full mt-2 p-3 bg-white border border-gray-300 rounded-xl focus:outline-none"
                     rows={4}
                     placeholder="Insira aqui dias e horários, preferências de booster (DUO BOOST), etc..."
                     value={observacao}
@@ -92,7 +92,7 @@ export default function StepResumo({ onNext, onBack }: Props) {
                         placeholder="CUPOM DE DESCONTO"
                         value={cupom}
                         onChange={(e) => setCupom(e.target.value)}
-                        className="flex-1 px-3 py-2 border rounded-xl"
+                        className="flex-1 px-3 py-2 bg-white border rounded-xl"
                     />
                     <button className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
                         OK

@@ -51,78 +51,92 @@ const Services = () => {
     const navigate = useNavigate();
 
     const irParaCheckout = () => {
-        navigate("/checkout");
+        const payload = {
+            currentRank,
+            currentDivision,
+            desiredRank,
+            desiredDivision,
+            server: currentServer,
+            line: currentLine,
+            basePrice: price,
+            subtotal: price * 0.9,
+            coupon: "ELOXOMP10",
+        };
+
+        setTimeout(() => {
+            const fakeOrderId = Math.floor(Math.random() * 10000);
+            localStorage.setItem(`elojob-order-${fakeOrderId}`, JSON.stringify(payload));
+            navigate(`/checkout/${fakeOrderId}`);
+        }, 500);
     };
+
+
+    /*
+        const irParaCheckout = async () => {
+            const payload = {
+                currentRank,
+                currentDivision,
+                desiredRank,
+                desiredDivision,
+                server: currentServer,
+                line: currentLine,
+                basePrice: price,
+                subtotal: price * 0.9,
+                coupon: "ELOXOMP10",
+            };
+
+            const response = await fetch("/mock/create-order", {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: { "Content-Type": "application/json" },
+            });
+
+            const result = await response.json();
+            navigate(`/checkout/${result.orderId}`);
+        };
+    */
+
 
 
     const calculatePrice = () => {
         if (!currentRank || !desiredRank) return;
 
-        /*console.log("Current Rank: " + currentRank.elo);*/
-        /*console.log("Desired Rank: " + desiredRank.elo);*/
-
         const currentIndex = ranks.findIndex((rank) => rank.elo === currentRank.elo);
         const desiredIndex = ranks.findIndex((rank) => rank.elo === desiredRank.elo);
 
-        /*console.log("Current Index: " + currentIndex);
-        console.log("Desired Index: " + desiredIndex);*/
-
         if (desiredIndex > currentIndex || (desiredIndex == currentIndex && currentDivision.id < desiredDivision.id && currentRank.hasSubDivisions)) {
-            /*console.log("Enter")*/
             let price: number | string = 0;
             for (let i = currentIndex; i <= desiredIndex; i++) {
                 const rankIterator = ranks[i];
-                /*console.log("Rank Iterator: " + rankIterator.elo);*/
                 if (rankIterator.hasSubDivisions) {
-                    /*console.log("Rank hasSubdivisions")*/
                     if (rankIterator.elo == currentRank.elo) {
-                        /*console.log("RankIterator equals currentRank: " + currentRank.elo);*/
-                        /*console.log("subDivisions length: " + subdivisions.length);*/
-                        /*console.log("currentDivision id: " + currentDivision.id);*/
                         if(currentRank.elo == desiredRank.elo) {
-                            /*console.log("Desired Rank equals currentRank: " + currentRank.elo);*/
                             for (let j = currentDivision.id; j < desiredDivision.id; j++) {
-                                /*console.log("Loop: " + j)*/
                                 price += rankIterator.multiplicator
-                                /*console.log("Price: " + price)*/
                             }
                         }else{
                             for (let j = currentDivision.id; j <= subdivisions.length; j++) {
-                                /*console.log("Loop for subdivisions to desired in the same rank - index: " + j)*/
                                 price += rankIterator.multiplicator
-                                /*console.log("Price: " + price)*/
                             }
                         }
                     } else {
-                        /*console.log("RankIterator do not equals currentRank")*/
                         if (rankIterator.elo == desiredRank.elo) {
-                            /*console.log("RankIterator equals desiredRank: " + desiredRank.elo)*/
                             for (let j = 0; j < desiredDivision.id-1; j++) {
-                                /*console.log("Loop for subdivisions to desired in last rank - index: " + j)*/
                                 price += rankIterator.multiplicator
-                                /*console.log("Price: " + price)*/
                             }
                         } else {
-                            /*console.log("RankIterator in the midle: " + rankIterator.elo)*/
                             for (let j = 0; j < subdivisions.length; j++) {
-                                /*console.log("Loop for subdivisions to desired in other rank - index: " + j)*/
                                 price += rankIterator.multiplicator
-                                /*console.log("Price: " + price)*/
-
                             }
                         }
                     }
                 } else {
                     if(rankIterator.elo !== currentRank.elo) {
-                        /*console.log("Rank Iterator dont have subdivisions: " + rankIterator.elo);*/
                         price += rankIterator.multiplicator
-                        /*console.log("Price: " + price)*/
                     }
                 }
             }
-            /*console.log("Before league multiplicator Price: " + price)*/
             price = price * (currentServer.percentage / 100)
-            /*console.log("After league multiplicator Price: " + price)*/
             setPrice(price);
             setValidate({
                 validate: false,
